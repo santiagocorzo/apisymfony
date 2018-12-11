@@ -10,4 +10,15 @@ namespace AppBundle\Repository;
  */
 class PostRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByName($name="")
+    {
+        $query = $this->createQueryBuilder("this")
+                      ->where("this.name = :name")
+                      ->setParameter("name", $name)
+                      ->getQuery();
+
+        try  {return $query->getArrayResult();}
+        catch (ORMException $e) {return null;}
+    
+    }
 }

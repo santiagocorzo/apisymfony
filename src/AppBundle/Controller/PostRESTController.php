@@ -16,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Voryx\RESTGeneratorBundle\Controller\VoryxController;
 
@@ -161,5 +164,23 @@ class PostRESTController extends VoryxController
         } catch (\Exception $e) {
             return FOSView::create($e->getMessage(), Codes::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+    /**
+     * Find a Post entity by name
+     * 
+     * @View(statusCode=200)
+     * @param $entity
+     * 
+     * @return Response
+     * 
+     * @Route("/api/test/{name}")
+     * @Method("POST")
+     */
+    public function findByNameAction(Request $request)  
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $post = $em ->getRepository('AppBundle:Post')->findByName($request->get('name'));
+        return new JsonResponse($post);
     }
 }
